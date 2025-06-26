@@ -102,7 +102,6 @@ export default function SignUp({ fileProccessData, setFileProccessData, setIsCon
       event.preventDefault();
       return;
     }
-    console.log("file: ", fileToSend)
     const formData = new FormData(event.currentTarget);
     const requestBodyData = {
         email: formData.get('email'),

@@ -59,30 +59,23 @@ export default function DisciplinesListPage() {
             
             setRecommendedDisciplines(disc)
         }
-        console.log("ola search ; ", searchParams)
     }, [data, searchParams])
 
 
     const handleSubmitTwo = async (event) => {
-        console.log("chamou o submit 2")
-            event.preventDefault();
-            let formData = new FormData(event.currentTarget)
-            const search = formData.get("disciplineName")
-            console.log("searcccch: ", search)
+        event.preventDefault();
+        let formData = new FormData(event.currentTarget)
+        const search = formData.get("disciplineName")
         if(search !== undefined && search != null) {
             setSearchParams(search)
             setSearchDisciplines(allDisciplines.data.filter((d) => d.name.includes(search.toUpperCase())))
-            console.log("searchDisciplines:; ", searchDisciplines)
             formData.delete("disciplineName")
-
         }
         const selectedDisciplines = formData.getAll("select-disciplines")
-        if (selectedDisciplines.length >0)
-         {
+        if (selectedDisciplines.length >0){
             event.preventDefault();
 
             const selectedDisciplines = formData.getAll("select-disciplines")
-            console.log(`conteudo: ${selectedDisciplines}`)
             const ids = recommendedDisciplines.map((r) => {
                 return r.id
             })

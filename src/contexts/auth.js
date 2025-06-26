@@ -23,7 +23,6 @@ export const AuthProvider= ({ children }) => {
     async function RefreshUserInfo() {
         const axiosResponse = await getStudent(cookies.authToken, user?.id)
         setUser(axiosResponse.data)
-        console.log("My user: ", user)
         setPreferenceName(axiosResponse?.data?.preference?.name)
         return axiosResponse
     }

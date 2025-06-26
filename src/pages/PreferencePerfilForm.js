@@ -33,7 +33,6 @@ export default function PreferencePerfilForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log("hello data: ", questions)
         const requestBody = questions?.data?.map((m) => {
             const optionsS = data.getAll(m.uniqueName)
             const o = optionsS.map((s) => {
@@ -49,7 +48,6 @@ export default function PreferencePerfilForm() {
                 selectedOptions: o,
             }
         })
-        console.log("requestBodyrequestBody: ", requestBody)
         mutate(requestBody)
     };
 

@@ -13,7 +13,7 @@ export default async function UseSignUpUser(requestBodyData) {
           return fetch('http://localhost:3001/users?type=student', options)
         },
       })
-      console.log("vish, error 2: ", error)
+      console.log("error on mutation::signupUser ->", error)
 
     return data;
     

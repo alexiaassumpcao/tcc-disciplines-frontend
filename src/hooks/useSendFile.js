@@ -8,7 +8,7 @@ export const useSendFile = () => {
           return sendFile(formDataBodyRequest)
         },
         onError: (e) => {
-          console.log('error', e)
+          console.log('error on mutation::sendFile -> ', e)
         }
       })
 }

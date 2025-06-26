@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
 export default async function UseSignUpProccessFile(name, email, password, fileToSend) {
-  console.log("file: ", fileToSend)
     const { data, error } = await useMutation({
         mutationFn: () => {
             const options = {
@@ -19,7 +18,7 @@ export default async function UseSignUpProccessFile(name, email, password, fileT
           return fetch('http://localhost:3001/files', options)
         },
       })
-      console.log("vish, error 1: ", error)
+      console.log("error on mutation::signUpProccessFile -> ", error)
     return data;
     
 }

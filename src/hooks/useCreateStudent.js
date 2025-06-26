@@ -8,7 +8,7 @@ export const useCreateStudent = (navigate) => {
           return createStudent(requestBodyData)
         },
         onError: () => {
-          console.log("error 1 ")
+          console.log("error on mutation::createStudent")
         },
         onSuccess: () => {
           navigate("/")

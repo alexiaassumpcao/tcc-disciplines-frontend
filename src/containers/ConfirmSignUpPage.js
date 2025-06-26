@@ -24,7 +24,6 @@ export default function ConfirmSignUpPage({ fileProccessData, setIsConfirmPage, 
     const { error, isError, mutate } = useCreateStudent(navigate)
     useEffect(() => {
       if (isError && error !== undefined) {
-        console.log("ERROR: ", error?.response?.data)
         if (error?.response?.data == "Create User: Email already in use!" || error?.response?.data =="Auth: Invalid email!") {
           setEmailErrorMessage("Email invalido!")
           setEmailError(true)

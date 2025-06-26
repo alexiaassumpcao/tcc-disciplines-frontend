@@ -7,7 +7,7 @@ export const useLogin = (ctxLoginFn, navigate) => {
           return ctxLoginFn(requestBodyData)
         },
         onError: () => {
-          console.log("error 1 ")
+          console.log("error on mutation::ctxLoginFn")
         },
         onSuccess: () => {
           navigate("/home")
