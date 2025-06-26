@@ -18,6 +18,7 @@ export default function DisciplinesListPage() {
     const [value, setValue] = useState(0);
     const [isSearch, setIsSearch] = useState(false)
     const [dbSelectedDisciplinesList, setDbSelectedDisciplinesList] = useState([])
+    const [searchDisciplines, setSearchDisciplines] = useState([])
 
     const [searchParams, setSearchParams] = useState();
 
@@ -27,9 +28,14 @@ export default function DisciplinesListPage() {
     };
 
     const { data, error } = useGetRecommendsDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
-    const { data:selectedDisciplinesList, error: errorGetSelectedDisciplinesList, refetch: refetchSelected } = useGetSelectedDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
+    const { data:selectedDisciplinesList, isSuccess, isLoading, error: errorGetSelectedDisciplinesList, refetch: refetchSelected } = useGetSelectedDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
 
-    const { data:searchDisciplines, error:errorGetDisciplines, refetch } = useGetDisciplinesList(ctx?.GetAuthToken(), searchParams)
+    useEffect(() => {
+        if (isSuccess && !isLoading) {
+            setDbSelectedDisciplinesList(selectedDisciplinesList.data)
+        }
+    }, [isSuccess, isLoading, selectedDisciplinesList])
+    const { data:allDisciplines, error:errorGetDisciplines, refetch } = useGetDisciplinesList(ctx?.GetAuthToken())
     const { mutate, error: errorPost} = useSendSelectedDisciplines(ctx?.GetAuthToken(), ctx?.user?.id, refetchSelected)
 
     useEffect(() => {
@@ -56,40 +62,38 @@ export default function DisciplinesListPage() {
         console.log("ola search ; ", searchParams)
     }, [data, searchParams])
 
-    useEffect(() => {
-        setDbSelectedDisciplinesList(selectedDisciplinesList?.data)
-    })
-
 
     const handleSubmitTwo = async (event) => {
-        console.log("chamou o submit 1")
+        console.log("chamou o submit 2")
             event.preventDefault();
             let formData = new FormData(event.currentTarget)
             const search = formData.get("disciplineName")
-        if(search) {
+            console.log("searcccch: ", search)
+        if(search !== undefined && search != null) {
             setSearchParams(search)
-            
-            
-            refetch()
+            setSearchDisciplines(allDisciplines.data.filter((d) => d.name.includes(search.toUpperCase())))
+            console.log("searchDisciplines:; ", searchDisciplines)
             formData.delete("disciplineName")
 
-        } else {
+        }
+        const selectedDisciplines = formData.getAll("select-disciplines")
+        if (selectedDisciplines.length >0)
+         {
             event.preventDefault();
 
-        const selectedDisciplines = formData.getAll("select-disciplines")
-        console.log(`conteudo: ${selectedDisciplines}`)
-        const ids = recommendedDisciplines.map((r) => {
-            return r.id
-        })
-        const listOfSelectedDisciplines = selectedDisciplines.map((discipline) => {
-  
-            return {
-                disciplineId: discipline,
-                wasRecommended: ids.includes(discipline),
-            }
-        })
-        console.log("list: ", listOfSelectedDisciplines)
-        mutate(listOfSelectedDisciplines)
+            const selectedDisciplines = formData.getAll("select-disciplines")
+            console.log(`conteudo: ${selectedDisciplines}`)
+            const ids = recommendedDisciplines.map((r) => {
+                return r.id
+            })
+            const listOfSelectedDisciplines = selectedDisciplines.map((discipline) => {
+    
+                return {
+                    disciplineId: discipline,
+                    wasRecommended: ids.includes(discipline),
+                }
+            })
+            mutate(listOfSelectedDisciplines)
 
         }
         setIsSearch(false)
@@ -126,7 +130,7 @@ export default function DisciplinesListPage() {
                             <CustomTabPanel value={value} index={1}>
                                 <SearchDisciplineTab setSearchParams={setSearchParams} setIsSearch={setIsSearch} />
                                 <FormLabel htmlFor="select-disciplines-searched" ></FormLabel>
-                                <InputMultiDisciplines disciplines={searchDisciplines?.data ? searchDisciplines.data : []} />
+                                <InputMultiDisciplines disciplines={searchDisciplines ? searchDisciplines : []} />
                             </CustomTabPanel>
                         </FormControl>
                         <BasicFilledButtom type="submit" text="Salvar"/>
@@ -136,13 +140,15 @@ export default function DisciplinesListPage() {
             </Box>
             <Box>
                 <h4>Disciplinas selecionadas pelo discente: </h4>
-                {dbSelectedDisciplinesList?.map((db, dbIndex) => {
+                {isLoading ? <p>Carregando...</p> :
+                dbSelectedDisciplinesList?.map((db, dbIndex) => {
                     return(
-                        <div key={`${db?.disciplineCode}-${dbIndex}`}>
-                            <span>{`${db?.disciplineCode} - ${db?.disciplineName}`}</span>
+                        <div key={`${db?.code[0]}-${dbIndex}`}>
+                            <span>{`${db?.code?.join(",")} - ${db?.name}`}</span>
                         </div>
                     )
-                })}
+                })
+                }
             </Box>
         </Box>
         </DefaultPageLayout> 

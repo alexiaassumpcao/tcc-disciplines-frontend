@@ -14,15 +14,14 @@ export default function PreferencePerfilForm() {
     const navigate = useNavigate()
     const { data: questions, error } = useGetPreferencePerfilFormQuestions(ctx?.GetAuthToken())
 
+    function onSuccessFn(data) {
+        ctx.setPreferenceId(data.data.preferenceId)
+        alert("done!")
+        navigate("/home")
+    }
+    const{ data, error: errorSubmit, mutate } = useSendPreferencePerfilFormResponses(ctx?.GetAuthToken(), ctx?.user?.id, onSuccessFn)
 
-    const{ data, error: errorSubmit, mutate } = useSendPreferencePerfilFormResponses(ctx?.GetAuthToken(), ctx?.user?.id, navigate)
 
-    useEffect(()=>{
-        if (data !== undefined) {
-            ctx.setPreferenceId(data.data.preferenceId)
-            ctx.setPreferenceId(data.data.preferenceId)
-        }
-    }, [data])
 
     const validateInputs = () => {
         return true;

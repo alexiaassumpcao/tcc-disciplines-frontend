@@ -25,8 +25,8 @@ export async function getSelectedDisciplines(authToken, userId) {
     return axiosResponse
 }
 
-export async function getDisciplinesList(authToken, disciplineName) {
-    const axiosResponse = await axios.get(`${API_URL}/disciplines?name=${disciplineName}`,
+export async function getDisciplinesList(authToken) {
+    const axiosResponse = await axios.get(`${API_URL}/disciplines`,
         {
             headers: setAuthorizationnHeader(authToken),
         });
