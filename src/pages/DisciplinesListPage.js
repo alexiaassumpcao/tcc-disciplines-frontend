@@ -68,7 +68,10 @@ export default function DisciplinesListPage() {
         const search = formData.get("disciplineName")
         if(search !== undefined && search != null) {
             setSearchParams(search)
-            setSearchDisciplines(allDisciplines.data.filter((d) => d.name.includes(search.toUpperCase())))
+            setSearchDisciplines(allDisciplines.data.filter((d) => 
+                d.name.includes(search.toUpperCase()) || 
+            d.code.includes(search.toUpperCase()) || 
+            undefined !== d.preferences.find((a) => a.name.includes(search.toLowerCase()) || a.name.includes(search.toUpperCase()) || a.name.includes(search))))
             formData.delete("disciplineName")
         }
         const selectedDisciplines = formData.getAll("select-disciplines")
