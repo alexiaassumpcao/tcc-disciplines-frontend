@@ -27,7 +27,7 @@ export default function DisciplinesListPage() {
         setValue(newValue);
     };
 
-    const { data, error } = useGetRecommendsDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
+    const { data, isSuccess: isSuccessGetRecom, isLoading: isLoadingGetRecom, error, refetch: refetchRecom } = useGetRecommendsDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
     const { data:selectedDisciplinesList, isSuccess, isLoading, error: errorGetSelectedDisciplinesList, refetch: refetchSelected } = useGetSelectedDisciplines(ctx?.GetAuthToken(), ctx?.user?.id)
 
     useEffect(() => {
@@ -35,11 +35,14 @@ export default function DisciplinesListPage() {
             setDbSelectedDisciplinesList(selectedDisciplinesList.data)
         }
     }, [isSuccess, isLoading, selectedDisciplinesList])
+    useEffect(() => {
+        refetchRecom()
+    }, [])
     const { data:allDisciplines, error:errorGetDisciplines, refetch } = useGetDisciplinesList(ctx?.GetAuthToken())
     const { mutate, error: errorPost} = useSendSelectedDisciplines(ctx?.GetAuthToken(), ctx?.user?.id, refetchSelected)
 
     useEffect(() => {
-        if(data && recommendedDisciplines.length == 0) {
+        if(data) {
             let disc=[]
             data.data.recommendByPreferencePerfil[0].disciplines.map((d) => {
                 const n = {
@@ -59,7 +62,7 @@ export default function DisciplinesListPage() {
             
             setRecommendedDisciplines(disc)
         }
-    }, [data, searchParams])
+    }, [data, searchParams, isSuccessGetRecom, isLoadingGetRecom])
 
 
     const handleSubmitTwo = async (event) => {
